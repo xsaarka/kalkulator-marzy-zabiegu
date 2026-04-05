@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Marży Zabiegu · R.O.S.™ · Sara Wierzbicka</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f5f0eb;
+    min-height: 100vh;
+    padding: 32px 16px 64px;
+    color: #1a1a1a;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* HEADER */
+  .header {
+    background: #6b1a2a;
+    border-radius: 16px;
+    padding: 32px 36px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: 40px; bottom: -60px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-brand {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: #c9a96e;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .header p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+  }
+
+  /* CARDS */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 32px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c9a96e;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e8e0d5;
+  }
+
+  /* ROWS */
+  .field-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0ebe4;
+  }
+  .field-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .field-row:first-of-type { padding-top: 0; }
+
+  .field-info { flex: 1; }
+  .field-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+  }
+  .field-hint {
+    font-size: 12px;
+    color: #999;
+    font-weight: 300;
+  }
+  .field-link {
+    font-size: 12px;
+    color: #c9a96e;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 4px;
+  }
+  .field-link:hover { text-decoration: underline; }
+
+  .field-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  input[type="number"] {
+    width: 110px;
+    height: 44px;
+    border: 1.5px solid #e0d8cf;
+    border-radius: 8px;
+    background: #faf8f5;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a1a;
+    text-align: right;
+    padding: 0 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]:focus { border-color: #c9a96e; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { opacity: 1; }
+
+  .currency {
+    font-size: 14px;
+    color: #999;
+    font-weight: 400;
+    min-width: 16px;
+  }
+
+  /* RESULT CARD */
+  .result-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 32px;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .result-item { }
+  .result-item-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .result-item-value {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  .result-item-value.negative { color: #c0392b; }
+  .result-item-value span {
+    font-size: 16px;
+    color: #999;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  .result-bar-wrap {
+    margin-top: 20px;
+    height: 8px;
+    background: #f0ebe4;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .result-bar {
+    height: 100%;
+    border-radius: 99px;
+    background: #6b1a2a;
+    transition: width 0.5s ease;
+  }
+
+  /* DIAGNOZA */
+  .diagnoza {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    display: none;
+  }
+  .diagnoza.show { display: block; }
+  .diagnoza.red { background: #fdf0ef; color: #c0392b; border-left: 3px solid #c0392b; }
+  .diagnoza.yellow { background: #fdf8ef; color: #b7860b; border-left: 3px solid #c9a96e; }
+  .diagnoza.green { background: #edf7f0; color: #1e7e45; border-left: 3px solid #2ecc71; }
+
+  /* FORMULARZ */
+  .form-card {
+    background: #6b1a2a;
+    border-radius: 16px;
+    padding: 32px;
+    color: #fff;
+  }
+  .form-card .section-label {
+    color: #c9a96e;
+    border-bottom-color: rgba(255,255,255,0.1);
+  }
+  .form-title {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .form-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .form-fields input,
+  .form-fields select {
+    width: 100%;
+    height: 48px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #fff;
+    padding: 0 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-fields input::placeholder { color: rgba(255,255,255,0.4); }
+  .form-fields input:focus,
+  .form-fields select:focus { border-color: #c9a96e; }
+  .form-fields select { color: rgba(255,255,255,0.7); }
+  .form-fields select option { background: #6b1a2a; color: #fff; }
+
+  .btn-submit {
+    width: 100%;
+    height: 52px;
+    background: #c9a96e;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-submit:hover { background: #b8935a; }
+  .btn-submit:active { transform: scale(0.99); }
+
+  .form-disclaimer {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* SUCCESS */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 16px 0;
+  }
+  .success-msg.show { display: block; }
+  .success-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+  .success-msg h3 {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .success-msg p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  /* AMORTYZACJA HELPER */
+  .helper-box {
+    display: none;
+    background: #faf8f5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 12px;
+    border: 1px solid #e8e0d5;
+  }
+  .helper-box.show { display: block; }
+  .helper-box .helper-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b1a2a;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .helper-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+  .helper-row input {
+    width: 90px;
+    height: 36px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    text-align: right;
+    padding: 0 8px;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .helper-row input::-webkit-inner-spin-button,
+  .helper-row input::-webkit-outer-spin-button { opacity: 1; }
+  .helper-calc-btn {
+    background: #6b1a2a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .helper-result {
+    font-size: 13px;
+    color: #6b1a2a;
+    font-weight: 600;
+    margin-top: 8px;
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    .card, .result-card, .form-card { padding: 20px; }
+    .result-grid { grid-template-columns: 1fr; gap: 16px; }
+    .result-item-value { font-size: 28px; }
+    input[type="number"] { width: 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-brand">R.O.S.™ · Sara Wierzbicka</div>
+    <h1>Kalkulator marży zabiegu</h1>
+    <p>Wpisz dane jednej usługi — dowiedz się ile realnie zarabiasz</p>
+  </div>
+
+  <!-- PRZYCHÓD -->
+  <div class="card">
+    <div class="section-label">Przychód</div>
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Cena zabiegu netto</div>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" id="cena" min="0" value="0" oninput="oblicz()">
+        <span class="currency">zł</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KOSZTY BEZPOŚREDNIE -->
+  <div class="card">
+    <div class="section-label">Koszty bezpośrednie</div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Materiały zużyte do zabiegu</div>
+        <div class="field-hint">ampułki, jednorazówki, preparaty</div>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" id="materialy" min="0" value="0" oninput="oblicz()">
+        <span class="currency">zł</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-info">
+        <div class="field-label">Koszt pracy</div>
+        <div class="field-hint">stawka × czas lub % prowizji od netto</div>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" id="praca" min="0" value="0" oninput="oblicz()">
+        <span class="currency">zł</span>
+      </div>
+    </div>
+
+    <div class="field-row" style="flex-wrap:wrap;">
+      <div class="field-info">
+        <div class="field-label">Amortyzacja sprzętu</div>
+        <div class="field-hint">cena ÷ 60 mies. ÷ zabiegów/mies.</div>
+        <a class="field-link" onclick="toggleHelper()">Nie wiem jak to policzyć — pomóż mi ↓</a>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" id="amortyzacja" min="0" value="0" oninput="oblicz()">
+        <span class="currency">zł</span>
+      </div>
+      <!-- HELPER -->
+      <div class="helper-box" id="helperBox" style="width:100%;">
+        <div class="helper-title">Kalkulator amortyzacji</div>
+        <div class="helper-row">
+          <span>Cena sprzętu</span>
+          <input type="number" id="hCena" placeholder="0" min="0">
+          <span>zł</span>
+        </div>
+        <div class="helper-row">
+          <span>Zabiegów miesięcznie tym sprzętem</span>
+          <input type="number" id="hZabiegi" placeholder="0" min="1">
+        </div>
+        <button class="helper-calc-btn" onclick="liczAmortyzacje()">Oblicz i wstaw ↑</button>
+        <div class="helper-result" id="helperResult"></div>
+      </div>
+    </div>
+
+    <div class="field-row" style="flex-wrap:wrap;">
+      <div class="field-info">
+        <div class="field-label">Podatek / ZUS (szacunkowo)</div>
+        <div class="field-hint">typowo 19–23% od ceny netto</div>
+        <a class="field-link" onclick="wyliczPodatek()">Wylicz automatycznie 20% ↓</a>
+      </div>
+      <div class="field-input-wrap">
+        <input type="number" id="podatek" min="0" value="0" oninput="oblicz()">
+        <span class="currency">zł</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARŻA NETTO -->
+  <div class="result-card">
+    <div class="section-label">Marża netto</div>
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="result-item-label">Zysk na zabiegu</div>
+        <div class="result-item-value" id="zysk">0<span>zł</span></div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">Marża netto</div>
+        <div class="result-item-value" id="marza">0<span>%</span></div>
+      </div>
+    </div>
+    <div class="result-bar-wrap">
+      <div class="result-bar" id="bar" style="width:0%"></div>
+    </div>
+    <div class="diagnoza" id="diagnoza"></div>
+  </div>
+
+  <!-- FORMULARZ -->
+  <div class="form-card">
+    <div class="section-label">Chcesz wiedzieć więcej?</div>
+    <div class="form-title">Pobierz pełną analizę na maila</div>
+    <div class="form-subtitle">Zostaw dane — odezwę się osobiście i pokażę Ci, gdzie Twoja klinika traci pieniądze na operacjach, które można naprawić w 30 dni.</div>
+
+    <div id="formContainer">
+      <div class="form-fields">
+        <input type="text" id="imie" placeholder="Imię i nazwisko" required>
+        <input type="email" id="email" placeholder="Adres e-mail" required>
+        <input type="tel" id="telefon" placeholder="Numer telefonu">
+        <select id="klinika">
+          <option value="" disabled selected>Wielkość kliniki</option>
+          <option value="1">Gabinet 1-osobowy</option>
+          <option value="2-5">Klinika 2–5 osób</option>
+          <option value="6-10">Klinika 6–10 osób</option>
+          <option value="10+">Klinika 10+ osób</option>
+        </select>
+        <button class="btn-submit" onclick="wyslijFormularz()">Chcę poznać swoje liczby →</button>
+      </div>
+      <div class="form-disclaimer">Twoje dane są bezpieczne. Bez spamu — tylko konkretne informacje.</div>
+    </div>
+
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">✓</div>
+      <h3>Dziękuję!</h3>
+      <p>Odezwę się do Ciebie w ciągu 24 godzin.<br>Sprawdź swoją skrzynkę e-mail.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function oblicz() {
+  const cena = parseFloat(document.getElementById('cena').value) || 0;
+  const mat  = parseFloat(document.getElementById('materialy').value) || 0;
+  const praca = parseFloat(document.getElementById('praca').value) || 0;
+  const amor = parseFloat(document.getElementById('amortyzacja').value) || 0;
+  const pod  = parseFloat(document.getElementById('podatek').value) || 0;
+
+  const koszty = mat + praca + amor + pod;
+  const zysk = cena - koszty;
+  const marza = cena > 0 ? (zysk / cena) * 100 : 0;
+
+  const zyskEl = document.getElementById('zysk');
+  const marzaEl = document.getElementById('marza');
+  const bar = document.getElementById('bar');
+  const diagEl = document.getElementById('diagnoza');
+
+  zyskEl.innerHTML = `${zysk.toFixed(0)}<span>zł</span>`;
+  marzaEl.innerHTML = `${marza.toFixed(1)}<span>%</span>`;
+
+  if (zysk < 0) {
+    zyskEl.classList.add('negative');
+    marzaEl.classList.add('negative');
+  } else {
+    zyskEl.classList.remove('negative');
+    marzaEl.classList.remove('negative');
+  }
+
+  const barVal = Math.max(0, Math.min(100, marza));
+  bar.style.width = barVal + '%';
+  bar.style.background = marza < 20 ? '#c0392b' : marza < 40 ? '#c9a96e' : '#2ecc71';
+
+  diagEl.className = 'diagnoza';
+  if (cena > 0) {
+    diagEl.classList.add('show');
+    if (marza < 0) {
+      diagEl.classList.add('red');
+      diagEl.innerHTML = '⚠️ <strong>Zabieg generuje stratę.</strong> Tracisz pieniądze na każdym zabiegu. To pilny sygnał do rewizji wyceny lub kosztów.';
+    } else if (marza < 20) {
+      diagEl.classList.add('red');
+      diagEl.innerHTML = '⚠️ <strong>Marża krytycznie niska (poniżej 20%).</strong> Większość klinik nie przeżywa długo z taką rentownością. Czas na rozmowę o strukturze kosztów.';
+    } else if (marza < 40) {
+      diagEl.classList.add('yellow');
+      diagEl.innerHTML = '⚡ <strong>Marża akceptowalna, ale jest przestrzeń do poprawy.</strong> Przy dobrym zarządzaniu ten zabieg może zarabiać znacznie więcej.';
+    } else {
+      diagEl.classList.add('green');
+      diagEl.innerHTML = '✅ <strong>Dobra marża!</strong> Ten zabieg pracuje na Ciebie. Pytanie — czy reszta Twojego menu wygląda tak samo?';
+    }
+  } else {
+    diagEl.classList.remove('show');
+  }
+}
+
+function toggleHelper() {
+  const box = document.getElementById('helperBox');
+  box.classList.toggle('show');
+}
+
+function liczAmortyzacje() {
+  const cena = parseFloat(document.getElementById('hCena').value) || 0;
+  const zabiegi = parseFloat(document.getElementById('hZabiegi').value) || 1;
+  const wynik = cena / 60 / zabiegi;
+  const res = document.getElementById('helperResult');
+  res.style.display = 'block';
+  res.textContent = `Amortyzacja na zabieg: ${wynik.toFixed(2)} zł`;
+  document.getElementById('amortyzacja').value = wynik.toFixed(2);
+  oblicz();
+}
+
+function wyliczPodatek() {
+  const cena = parseFloat(document.getElementById('cena').value) || 0;
+  document.getElementById('podatek').value = (cena * 0.20).toFixed(2);
+  oblicz();
+}
+
+async function wyslijFormularz() {
+  const imie = document.getElementById('imie').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const telefon = document.getElementById('telefon').value.trim();
+  const klinika = document.getElementById('klinika').value;
+
+  if (!imie || !email) {
+    alert('Wypełnij przynajmniej imię i adres e-mail.');
+    return;
+  }
+
+  const btn = document.querySelector('.btn-submit');
+  btn.textContent = 'Wysyłam...';
+  btn.disabled = true;
+
+  const cena = parseFloat(document.getElementById('cena').value) || 0;
+  const mat  = parseFloat(document.getElementById('materialy').value) || 0;
+  const praca = parseFloat(document.getElementById('praca').value) || 0;
+  const amor = parseFloat(document.getElementById('amortyzacja').value) || 0;
+  const pod  = parseFloat(document.getElementById('podatek').value) || 0;
+  const zysk = cena - mat - praca - amor - pod;
+  const marza = cena > 0 ? ((zysk / cena) * 100).toFixed(1) : 0;
+
+  const payload = {
+    imie,
+    email,
+    telefon,
+    klinika,
+    cena_zabiegu: cena,
+    materialy: mat,
+    koszt_pracy: praca,
+    amortyzacja: amor,
+    podatek: pod,
+    zysk_na_zabiegu: zysk.toFixed(2),
+    marza_netto: marza + '%',
+    data: new Date().toLocaleString('pl-PL')
+  };
+
+  try {
+    await fetch('https://formspree.io/f/mkoppkdr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {}
+
+  document.getElementById('formContainer').style.display = 'none';
+  document.getElementById('successMsg').classList.add('show');
+}
+</script>
+</body>
+</html>
