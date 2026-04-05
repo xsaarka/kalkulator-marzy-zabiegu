@@ -6,7 +6,7 @@
 <title>Kalkulator Marży Zabiegu · R.O.S.™ · Sara Wierzbicka</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('ucslMTiVGU3dUUML');</script>
+<script>emailjs.init('ucslMTiVGU3dUUML-');</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Poppins', sans-serif; background: #f5f0eb; min-height: 100vh; padding: 32px 16px 64px; color: #1a1a1a; }
@@ -289,7 +289,7 @@ async function wyslijFormularz() {
       cena_zabiegu: cena + ' zł',
       marza_netto: marza + '%',
       zysk_na_zabiegu: zysk.toFixed(2) + ' zł'
-    }, 'ucslMTiVGU3dUUML');
+    }, 'ucslMTiVGU3dUUML-');
   } catch(e) { console.log('EmailJS error:', e); }
 
   try {
