@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kalkulator Marży Zabiegu · R.O.S.™ · Sara Wierzbicka</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('ucslMTiVGU3dUUML');</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -646,12 +648,15 @@ async function wyslijFormularz() {
   };
 
   try {
+    // Wyślij do Formspree
     await fetch('https://formspree.io/f/mkoppkdr', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
   } catch(e) {}
+
+
 
   document.getElementById('formContainer').style.display = 'none';
   document.getElementById('successMsg').classList.add('show');
