@@ -198,7 +198,7 @@
     <div class="success-msg" id="successMsg">
       <div class="success-icon">✓</div>
       <h3>Dziękuję!</h3>
-      <p>Odezwę się do Ciebie w ciągu 24 godzin.<br>Sprawdź swoją skrzynkę e-mail.</p>
+      <p>Wysłałam Ci e-mail z pełną analizą.<br><br><strong style="color:#c9a96e;">Sprawdź folder Spam</strong> — jeśli tam jest, oznacz jako "Nie spam" i dodaj mnie do kontaktów, żeby kolejne wiadomości trafiały prosto do Ciebie.</p>
     </div>
   </div>
 
@@ -302,6 +302,14 @@ async function wyslijFormularz() {
 
   document.getElementById('formContainer').style.display = 'none';
   document.getElementById('successMsg').classList.add('show');
+
+  var wyniki = document.getElementById('wynikiFinal');
+  var diagnoza = marza < 0 ? '⚠️ Zabieg generuje stratę' : marza < 20 ? '⚠️ Marża krytycznie niska' : marza < 40 ? '⚡ Marża akceptowalna' : '✅ Dobra marża';
+  wyniki.innerHTML =
+    '<p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#c9a96e;margin-bottom:12px;">Twoje wyniki</p>' +
+    '<p style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:6px;">Zysk na zabiegu: <strong style="color:#fff;">' + zysk.toFixed(2) + ' zł</strong></p>' +
+    '<p style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:6px;">Marża netto: <strong style="color:#fff;">' + marza + '%</strong></p>' +
+    '<p style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:10px;">' + diagnoza + '</p>';
 }
 </script>
 </body>
